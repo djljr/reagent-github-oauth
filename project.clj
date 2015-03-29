@@ -6,7 +6,8 @@
 
   :source-paths ["src/clj" "src/cljs"]
 
-  :dependencies [[org.clojure/clojure "1.6.0"]
+  :dependencies [[clj-http "1.0.0"]
+                 [org.clojure/clojure "1.6.0"]
                  [ring-server "0.4.0"]
                  [cljsjs/react "0.13.1-0"]
                  [reagent "0.5.0"]
@@ -19,7 +20,11 @@
                  [compojure "1.3.2"]
                  [selmer "0.8.2"]
                  [environ "1.0.0"]
-                 [secretary "1.2.2"]]
+                 [secretary "1.2.2"]
+                 [com.cemerick/friend "0.2.1" :exclusions [ring/ring-core org.clojure/core.cache org.apache.httpcomponents/httpclient]]
+                 [friend-oauth2 "0.1.3" :exclusions [org.apache.httpcomponents/httpcore]]
+                 [cheshire "5.4.0"]
+                 [http-kit "2.1.19"]]
 
   :plugins [[lein-cljsbuild "1.0.4"]
             [lein-environ "1.0.0"]
