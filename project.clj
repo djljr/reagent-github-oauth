@@ -16,6 +16,7 @@
                  [org.clojure/clojurescript "0.0-3126" :scope "provided"]
                  [ring "1.3.2"]
                  [ring/ring-defaults "0.1.4"]
+                 [ring/ring-json "0.3.1"]
                  [prone "0.8.1"]
                  [compojure "1.3.2"]
                  [selmer "0.8.2"]
@@ -24,7 +25,8 @@
                  [com.cemerick/friend "0.2.1" :exclusions [ring/ring-core org.clojure/core.cache org.apache.httpcomponents/httpclient]]
                  [friend-oauth2 "0.1.3" :exclusions [org.apache.httpcomponents/httpcore]]
                  [cheshire "5.4.0"]
-                 [http-kit "2.1.19"]]
+                 [http-kit "2.1.19"]
+                 [cljs-ajax "0.3.10"]]
 
   :plugins [[lein-cljsbuild "1.0.4"]
             [lein-environ "1.0.0"]

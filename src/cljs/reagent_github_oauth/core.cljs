@@ -1,18 +1,28 @@
 (ns reagent-github-oauth.core
-    (:require [reagent.core :as reagent :refer [atom]]
-              [reagent.session :as session]
-              [secretary.core :as secretary :include-macros true]
-              [goog.events :as events]
-              [goog.history.EventType :as EventType]
-              [cljsjs.react :as react])
-    (:import goog.History))
+  (:require 
+    [reagent.core :as reagent :refer [atom]]
+    [reagent.session :as session]
+    [ajax.core :refer [GET]]
+    [secretary.core :as secretary :include-macros true]
+    [goog.events :as events]
+    [goog.history.EventType :as EventType]
+    [cljsjs.react :as react])
+  (:import goog.History))
+
+
+(enable-console-print!)
+
+(def user (atom {}))
 
 ;; -------------------------
 ;; Views
 
 (defn home-page []
   [:div [:h2 "Welcome to reagent-github-oauth"]
-   [:div [:a {:href "#/about"} "go to about page"]]])
+   [:div [:a {:href "#/about"} "go to about page"]
+         (if (@user "email")
+          [:a {:href "/logout"} (@user "email")]
+          [:a {:href "/login"} "Login"])]])
 
 (defn about-page []
   [:div [:h2 "About reagent-github-oauth"]
@@ -21,12 +31,28 @@
 (defn current-page []
   [:div [(session/get :current-page)]])
 
+
+;; -------------------------
+;; Server Requests
+
+(defn update-user []
+  (GET "/api/userinfo"
+    {:handler (fn [data]
+                (reset! user (into @user data)))
+     :error-handler (fn [response]
+                      (println "ERROR: " (str response)))}))
+
 ;; -------------------------
 ;; Routes
 (secretary/set-config! :prefix "#")
 
 (secretary/defroute "/" []
-  (session/put! :current-page #'home-page))
+  (session/put! :current-page #'home-page)
+  (GET "/api/userinfo" {:handler (fn [data]
+                                  (.setInterval js/window update-user 60000)
+                                  (reset! user (into @user data)))
+                        :error-handler (fn [response]
+                                         (println "ERROR: " (str response)))}))
 
 (secretary/defroute "/about" []
   (session/put! :current-page #'about-page))
